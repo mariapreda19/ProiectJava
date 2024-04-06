@@ -34,20 +34,17 @@ public class Dog {
         this.name = name;
     }*/
 
-    public void setPosition(int positionX, int positionY) {
+    /*public void setPosition(int positionX, int positionY) {
         this.positionX = positionX;
         this.positionY = positionY;
-    }
+    }*/
 
     public void setCollected(boolean collected) {
         this.collected = collected;
     }
 
     //abstract method for drawing the dog
-    public static void drawDogs(Graphics g, Dog dog) {
-        int cellSize = 40; // Size of each cell in pixels
-        g.setColor(Color.PINK);
-        int[] position = {dog.getPositionX(), dog.getPositionY()};
-        g.fillOval(position[0] * cellSize, position[1] * cellSize, cellSize, cellSize);
+    public void drawDogs(Graphics g, Dog dog) {
+        int cellSize = 40;
     }
 }

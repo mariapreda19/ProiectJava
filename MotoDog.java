@@ -2,11 +2,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 public class MotoDog extends Dog{
     //each dog heals the player when collected
-    private int healPower;
+    private final int healPower;
 
-    private int points;
+    private final int points;
 
-    private String ability;
+    private final String ability;
 
     public MotoDog(String name, int possitionX, int posstionY, int healPower, int points, String ability){
         super(name, possitionX, posstionY);
@@ -16,7 +16,7 @@ public class MotoDog extends Dog{
     }
 
     //getters
-
+    /*
     public int getHealPower(){
         return healPower;
     }
@@ -28,15 +28,15 @@ public class MotoDog extends Dog{
     public String getAbility(){
         return ability;
     }
-
+*/
     //methods
-
+/*
     public void beingCollected(Player player){
         player.setHealthPoints(player.getHealthPoints() + healPower);
         player.setScore(player.getScore() + points);
         collected = true;
     }
-
+*/
     // Draw the dog
 
     public void drawDog(Graphics g, MotoDog dog) {

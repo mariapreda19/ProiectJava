@@ -14,7 +14,7 @@ public class ClassicDog extends Dog{
 
     //getters
 
-    public int getHealPower(){
+    /*public int getHealPower(){
         return healPower;
     }
 
@@ -28,7 +28,7 @@ public class ClassicDog extends Dog{
         player.setHealthPoints(player.getHealthPoints() + healPower);
         player.setScore(player.getScore() + points);
         collected = true;
-    }
+    }*/
 
     // Draw the dog
 
