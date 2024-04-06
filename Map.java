@@ -10,12 +10,9 @@ public class Map {
     private Level level;
     private List<Enemy> enemies;
 
-    public Map(int[][] layout, List<Point> dogs, List<Point> bulletPositions, Player player, Level level, List<Enemy> enemies) {
+    public Map(int[][] layout, List<Dog> dogs, List<Point> bulletPositions, Player player, Level level, List<Enemy> enemies) {
         this.layout = layout;
-        this.dogs = new ArrayList<>();
-        for (Point dog : dogs) {
-            this.dogs.add(new Dog(" ", (int) dog.getX(), (int) dog.getY()));
-        }
+        this.dogs = new ArrayList<>(dogs);
         this.bulletPositions = bulletPositions;
         this.player = player;
         this.level = level;
@@ -100,11 +97,8 @@ public class Map {
         }
 
         // Draw dogs
-        for (Point dogPosition : getDogPositions()) {
-            int x = (int) dogPosition.getX();
-            int y = (int) dogPosition.getY();
-            g.setColor(Color.BLUE);
-            g.fillOval(x * cellSize, y * cellSize, cellSize, cellSize);
+        for (Dog dog : dogs) {
+            dog.drawDog(g, dog);
         }
 
         // Draw bullets
@@ -115,4 +109,5 @@ public class Map {
             g.fillOval(x * cellSize, y * cellSize, cellSize, cellSize);
         }
     }
+
 }

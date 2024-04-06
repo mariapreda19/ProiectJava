@@ -83,6 +83,5 @@ public class Bullet {
         g.setColor(Color.GREEN);
         int[] position = bullet.getPosition();
         g.fillOval(position[0] * cellSize, position[1] * cellSize, cellSize, cellSize);
-
     }
 }

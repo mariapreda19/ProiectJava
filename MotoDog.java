@@ -2,17 +2,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 public class MotoDog extends Dog{
     //each dog heals the player when collected
-    private final int healPower;
+    private final int healPower = 10;
 
-    private final int points;
+    private final int points = 5;
 
-    private final String ability;
+    private final String ability = " ";
 
-    public MotoDog(String name, int possitionX, int posstionY, int healPower, int points, String ability){
+    public MotoDog(String name, int possitionX, int posstionY){
         super(name, possitionX, posstionY);
-        this.healPower = healPower;
-        this.points = points;
-        this.ability = ability;
     }
 
     //getters
@@ -39,11 +36,11 @@ public class MotoDog extends Dog{
 */
     // Draw the dog
 
-    public void drawDog(Graphics g, MotoDog dog) {
-        int cellSize = 40; // Size of each cell in pixels
+    @Override
+    public void drawDog(Graphics g, Dog dog) {
+        int cellSize = 40;
         g.setColor(Color.YELLOW);
-        int[] position = {getPositionX(), getPositionY()};
-        g.fillOval(position[0] * cellSize, position[1] * cellSize, cellSize, cellSize);
+        g.fillOval(positionX * cellSize, positionY * cellSize, cellSize, cellSize);
     }
 
 }

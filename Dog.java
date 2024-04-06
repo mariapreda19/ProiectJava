@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Dog {
+public abstract class Dog {
     protected String name;
     protected int positionX, positionY;
     protected boolean collected;
@@ -44,7 +44,5 @@ public class Dog {
     }
 
     //abstract method for drawing the dog
-    public void drawDogs(Graphics g, Dog dog) {
-        int cellSize = 40;
-    }
+    public abstract void drawDog(Graphics g, Dog dog);
 }

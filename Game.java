@@ -93,7 +93,7 @@ public class Game {
                 map.drawMap(g);
                 player.drawPlayer(g, player);
                 for (Dog dog : dogs) {
-                    dog.drawDogs(g, dog);
+                    dog.drawDog(g, dog);
                 }
 
                 for (Enemy enemy : enemies) {

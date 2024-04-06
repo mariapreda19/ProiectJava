@@ -2,14 +2,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class ClassicDog extends Dog{
-    private final int healPower;
+    private int healPower = 0;
 
-    private final int points;
+    private int points = 1;
 
-    public ClassicDog(String name, int possitionX, int posstionY, int healPower, int points){
+
+    public ClassicDog(String name, int possitionX, int posstionY){
         super(name, possitionX, posstionY);
-        this.healPower = healPower;
-        this.points = points;
     }
 
     //getters
@@ -32,11 +31,11 @@ public class ClassicDog extends Dog{
 
     // Draw the dog
 
-    public void drawDog(Graphics g, ClassicDog dog) {
+    @Override
+    public void drawDog(Graphics g, Dog dog) {
         int cellSize = 40;
-        g.setColor(Color.PINK);
-        int[] position = {getPositionX(), getPositionY()};
-        g.fillOval(position[0] * cellSize, position[1] * cellSize, cellSize, cellSize);
+        g.setColor(Color.RED);
+        g.fillOval(positionX * cellSize, positionY * cellSize, cellSize, cellSize);
     }
 
 

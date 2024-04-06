@@ -15,22 +15,16 @@ public class Main {
         };
 
         List<Dog> dogPositions = new ArrayList<>();
-        // Example dog positions
-        dogPositions.add(new ClassicDog("Buddy", 1, 2, 10, 100)); // Example ClassicDog position
-        dogPositions.add(new MotoDog("Rex", 3, 3, 15, 150, "Speed Boost")); // Example MotoDog position
-
-        // Convert List<Dog> to List<Point>
-        List<Point> dogPoints = new ArrayList<>();
-        for (Dog dog : dogPositions) {
-            dogPoints.add(new Point(dog.getPositionX(), dog.getPositionY()));
-        }
+// Example dog positions
+        dogPositions.add(new ClassicDog("Buddy", 1, 2)); // Example ClassicDog position
+        dogPositions.add(new MotoDog("Rex", 3, 3)); // Example MotoDog position
 
         List<Point> bulletPositions = new ArrayList<>();
         bulletPositions.add(new Point(1, 3)); // Example bullet position
 
         Player player = new Player("Player", 1, 1, 0, "", 1, 1, 0); // Initial player position
 
-        Map map = new Map(layout, dogPoints, bulletPositions, player, new Level(1, 1, 1, 1, 1), new ArrayList<>());
+        Map map = new Map(layout, dogPositions, bulletPositions, player, new Level(1, 1, 1, 1, 1), new ArrayList<>());
 
         // Initialize enemies list
         List<Enemy> enemies = new ArrayList<>();
