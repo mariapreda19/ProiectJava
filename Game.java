@@ -1,119 +1,126 @@
 import java.awt.*;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.Graphics;
+import javax.swing.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.awt.Color;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
+
 
 
 public class Game {
     private Map map;
     private Player player;
     private List<Enemy> enemies;
-    private List<Bullet> bullets;
     private Level level;
-    private List<Dog> dogs;
+    private JPanel panel; // Reference to the panel
+    private boolean gameOver;
+    private boolean gameWon;
 
-    public Game(Map map, Player player, List<Enemy> enemies, List<Bullet> bullets, Level level, List<Dog> dogs) {
+    public Game(Map map, Player player, List<Enemy> enemies, Level level) {
         this.map = map;
         this.player = player;
         this.enemies = enemies;
-        this.bullets = bullets;
         this.level = level;
-        this.dogs = dogs;
+        this.gameOver = false;
+        this.gameWon = false;
 
-        // Create enemies and add them to the list
-        Enemy enemy1 = new Enemy(100, 1, 5, 5); // Example enemy, adjust position and attributes as needed
+
+        Enemy enemy1 = new Enemy(100, 1, 5, 5);
         enemies.add(enemy1);
     }
 
-    // Method to update the game state
     public void update() {
-        // Move enemies
-        for (Enemy enemy : enemies) {
-            enemy.move(player.getPositionX(), player.getPositionY(), map.getLayout());
-            enemy.catchPlayer(player); // Check if enemy catches the player
-            // Check if enemy is on the same position as player
-            if (enemy.getPosition()[0] == player.getPositionX() && enemy.getPosition()[1] == player.getPositionY()){
-                // Player loses if an enemy is on the same position
-                System.out.println("Game Over! You've been caught by an enemy.");
-                // Implement game over logic here
+        if (gameOver) return;
+
+        List<Bullet> bulletsCopy = new ArrayList<>(map.getBullets());
+        for (Bullet bullet : bulletsCopy) {
+            if (bullet.getPositionX() == player.getPositionX() && bullet.getPositionY() == player.getPositionY()) {
+                map.removeBullet(bullet);
             }
         }
 
-        // Check win condition: if all dogs are collected
-        if (allDogsCollected()) {
-            System.out.println("Congratulations! You've collected all the dogs and won the level.");
-            // Implement level completion logic here
+        List<Dog> dogsCopy = new ArrayList<>(map.getDogPositions());
+        for (Dog dog : dogsCopy) {
+            if (dog.getPositionX() == player.getPositionX() && dog.getPositionY() == player.getPositionY()) {
+                map.removeDog(dog);
+                gameWon = allDogsCollected();
+            }
         }
 
-        // Move bullets, check collisions, etc.
+
+        for (Enemy enemy : enemies) {
+            enemy.move(player.getPositionX(), player.getPositionY(), map.getLayout());
+            enemy.catchPlayer(player);
+            if (enemy.getPosition()[0] == player.getPositionX() && enemy.getPosition()[1] == player.getPositionY()) {
+                System.out.println("Game Over! You've been caught by an enemy.");
+                gameOver = true;
+            }
+        }
+
+        if (allDogsCollected()) {
+            allDogsCollected();
+        }
     }
 
-    // Helper method to check if all dogs are collected
     private boolean allDogsCollected() {
-        List<Point> dogPositions = map.getDogPositions();
-        for (Point dogPosition : dogPositions) {
-            if (!map.isDogCollected(dogPosition)) {
+        for (Dog dog : map.getDogPositions()) {
+            if (!dog.isCollected()) {
                 return false;
             }
         }
+        System.out.println("Congratulations! You've collected all the dogs and won the level.");
+        gameOver = true;
         return true;
     }
 
-    // Method to handle player movement
     public void movePlayer(int dx, int dy) {
         map.movePlayer(player, dx, dy);
     }
 
-    // Method to handle shooting
     public void shoot(int dx, int dy) {
-        // Check if player has enough bullets
         if (player.getBullets() > 0) {
-            // Create a bullet in the specified direction
             Bullet bullet = new Bullet(player.getPositionX(), player.getPositionY(), dx, dy);
-            bullets.add(bullet);
+            map.getBullets().add(bullet);
             player.shoot();
         }
     }
 
-    // Method to start the game
     public void startGame() {
-        // Create a JFrame and add the map and player to it
         JFrame frame = new JFrame("Simple Map Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+        frame.setSize(600, 650);
 
-        JPanel panel = new JPanel() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel messagePanel = new JPanel();
+
+
+        panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                map.drawMap(g);
-                player.drawPlayer(g, player);
-                for (Dog dog : dogs) {
-                    dog.drawDog(g, dog);
+                if (!gameOver && !gameWon) {
+                    map.drawMap(g);
+                    player.drawPlayer(g, player);
+                    for (Dog dog : map.getDogPositions()) {
+                        dog.drawDog(g, dog);
+                    }
+                    for (Enemy enemy : enemies) {
+                        enemy.drawEnemies(g, enemy);
+                    }
+                    for (Bullet bullet : map.getBullets()) {
+                        bullet.drawBullets(g, bullet);
+                    }
                 }
-
-                for (Enemy enemy : enemies) {
-                    enemy.drawEnemies(g, enemy);
-                }
-
-                for (Bullet bullet : bullets) {
-                    bullet.drawBullets(g, bullet);
-                }
-
-
-                // Add drawing for enemies, bullets, etc. if necessary
             }
         };
 
-        frame.add(panel);
-        frame.setVisible(true);
-        frame.setFocusable(true); // Set focusable to true so that the frame can receive keyboard events
+        mainPanel.add(panel, BorderLayout.CENTER);
 
-        // Add keyboard listener for player movement
+        frame.add(mainPanel);
+        frame.setVisible(true);
+        frame.setFocusable(true);
+
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {}
@@ -139,10 +146,9 @@ public class Game {
                         panel.repaint();
                         break;
                     case KeyEvent.VK_SPACE:
-                        shoot(0, -1); // Shoot upwards
+                        shoot(0, -1);
                         panel.repaint();
                         break;
-                    // Add more cases for other directions or actions as needed
                 }
             }
 
@@ -151,19 +157,38 @@ public class Game {
         });
 
         // Start the game loop
-        while (true) {
-            // Update the game state
+        while (!gameOver && !gameWon) {
             update();
-
-            // Repaint the panel to render the updated game state
-            panel.repaint();
-
-            // Add a delay to control the game's frame rate
             try {
-                Thread.sleep(100); // Adjust the delay as needed
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+        // Remove the game panel and display the game message or image in the center
+        mainPanel.remove(panel);
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        if (gameWon) {
+            messagePanel.add(new JLabel("Congratulations! You've collected all the dogs and won the level.", SwingConstants.CENTER));
+        } else {
+            ImageIcon gameOverImageIcon = new ImageIcon("gameOver.jpg");
+            Image gameOverImage = gameOverImageIcon.getImage().getScaledInstance(600, 650, Image.SCALE_DEFAULT);
+            ImageIcon resizedGameOverImageIcon = new ImageIcon(gameOverImage);
+            JLabel gameOverLabel = new JLabel(resizedGameOverImageIcon);
+            messagePanel.add(gameOverLabel);
+        }
+
+
+        mainPanel.add(messagePanel, gbc);
+        mainPanel.revalidate();
     }
+
+
+
+
 }

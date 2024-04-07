@@ -7,6 +7,9 @@ public class Bullet {
     private boolean active; // If the bullet is active or not
     private boolean collected; // If the bullet is collected or not
 
+    private int id;
+    private static int nextId = 1;
+
     // Constructor
     public Bullet(int x, int y, int dx, int dy) {
         this.x = x;
@@ -15,6 +18,8 @@ public class Bullet {
         this.dy = dy;
         active = true;
         collected = false;
+        id = nextId;
+        nextId++;
     }
 
     // Method to move the bullet
@@ -24,8 +29,13 @@ public class Bullet {
     }
 
     // Getters
-    public int[] getPosition() {
-        return new int[]{x, y};
+
+    public int getPositionX() {
+        return x;
+    }
+
+    public int getPositionY() {
+        return y;
     }
 
     public int[] getDirection() {
@@ -33,6 +43,9 @@ public class Bullet {
     }
 
     public boolean isActive() {
+        if (collected) {
+            return false;
+        }
         return active;
     }
 
@@ -81,7 +94,8 @@ public class Bullet {
     public static void drawBullets(Graphics g, Bullet bullet) {
         int cellSize = 40; // Size of each cell in pixels
         g.setColor(Color.GREEN);
-        int[] position = bullet.getPosition();
-        g.fillOval(position[0] * cellSize, position[1] * cellSize, cellSize, cellSize);
+        if (bullet.isActive()) {
+            g.fillOval(bullet.getPositionX() * cellSize, bullet.getPositionY() * cellSize, cellSize, cellSize);
+        }
     }
 }

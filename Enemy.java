@@ -103,7 +103,7 @@ public class Enemy {
         while (!openList.isEmpty()) {
             //make the enemy less efficient
             try {
-                Thread.sleep(100);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
