@@ -1,3 +1,5 @@
+package src;
+
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
@@ -6,6 +8,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
+enum EndFlag{
+    CAUGHT, WON, NO_HEALTH_POINTS, NOFLAGS
+}
 
 
 public class Game {
@@ -13,25 +18,37 @@ public class Game {
     private Player player;
     private List<Enemy> enemies;
     private Level level;
-    private JPanel panel; // Reference to the panel
-    private boolean gameOver;
-    private boolean gameWon;
+    private JPanel panel;
+    private EndFlag gameOver;
 
     public Game(Map map, Player player, List<Enemy> enemies, Level level) {
         this.map = map;
         this.player = player;
         this.enemies = enemies;
         this.level = level;
-        this.gameOver = false;
-        this.gameWon = false;
+        this.gameOver = EndFlag.NOFLAGS;
 
 
         Enemy enemy1 = new Enemy(100, 1, 5, 5);
         enemies.add(enemy1);
     }
 
-    public void update() {
-        if (gameOver) return;
+    public void update(float lastTime, float currentTime) {
+        if (gameOver != EndFlag.NOFLAGS) return;
+
+
+        // Decrease player health points at every 10 seconds of the game
+
+        if (currentTime - lastTime >= 10 && player.getHealthPoints() > 0){
+            player.setHealthPoints(player.getHealthPoints() - 10);
+            lastTime = currentTime;
+        }
+        else{
+            if (player.getHealthPoints() <= 0){
+                gameOver = EndFlag.NO_HEALTH_POINTS;
+            }
+        }
+
 
         List<Bullet> bulletsCopy = new ArrayList<>(map.getBullets());
         for (Bullet bullet : bulletsCopy) {
@@ -44,7 +61,7 @@ public class Game {
         for (Dog dog : dogsCopy) {
             if (dog.getPositionX() == player.getPositionX() && dog.getPositionY() == player.getPositionY()) {
                 map.removeDog(dog);
-                gameWon = allDogsCollected();
+                player.collectedADog(dog);
             }
         }
 
@@ -53,8 +70,8 @@ public class Game {
             enemy.move(player.getPositionX(), player.getPositionY(), map.getLayout());
             enemy.catchPlayer(player);
             if (enemy.getPosition()[0] == player.getPositionX() && enemy.getPosition()[1] == player.getPositionY()) {
-                System.out.println("Game Over! You've been caught by an enemy.");
-                gameOver = true;
+                System.out.println("src.Game Over! You've been caught by an enemy.");
+                gameOver = EndFlag.CAUGHT;
             }
         }
 
@@ -70,7 +87,7 @@ public class Game {
             }
         }
         System.out.println("Congratulations! You've collected all the dogs and won the level.");
-        gameOver = true;
+        gameOver = EndFlag.WON;
         return true;
     }
 
@@ -87,7 +104,7 @@ public class Game {
     }
 
     public void startGame() {
-        JFrame frame = new JFrame("Simple Map Game");
+        JFrame frame = new JFrame("Simple src.Map src.Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 650);
 
@@ -99,7 +116,7 @@ public class Game {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                if (!gameOver && !gameWon) {
+                if (gameOver == EndFlag.NOFLAGS) {
                     map.drawMap(g);
                     player.drawPlayer(g, player);
                     for (Dog dog : map.getDogPositions()) {
@@ -156,9 +173,22 @@ public class Game {
             public void keyReleased(KeyEvent e) {}
         });
 
-        // Start the game loop
-        while (!gameOver && !gameWon) {
-            update();
+        float lastTime = 0;
+        JPanel statusPanel = new JPanel(new GridLayout(1, 2));
+        JLabel scoreLabel = new JLabel("Score: " + player.getScore());
+        JLabel healthLabel = new JLabel("Health: " + player.getHealthPoints());
+        statusPanel.add(scoreLabel);
+        statusPanel.add(healthLabel);
+        mainPanel.add(statusPanel, BorderLayout.SOUTH);
+
+
+        while (gameOver == EndFlag.NOFLAGS) {
+            update(lastTime, System.currentTimeMillis() / 1000);
+
+
+            scoreLabel.setText("Score: " + player.getScore());
+            healthLabel.setText("Health: " + player.getHealthPoints());
+
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -166,22 +196,24 @@ public class Game {
             }
         }
 
-        // Remove the game panel and display the game message or image in the center
+
         mainPanel.remove(panel);
         mainPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        if (gameWon) {
+        mainPanel.remove(statusPanel);
+
+        if (gameOver == EndFlag.WON) {
             messagePanel.add(new JLabel("Congratulations! You've collected all the dogs and won the level.", SwingConstants.CENTER));
-        } else {
-            ImageIcon gameOverImageIcon = new ImageIcon("gameOver.jpg");
-            Image gameOverImage = gameOverImageIcon.getImage().getScaledInstance(600, 650, Image.SCALE_DEFAULT);
-            ImageIcon resizedGameOverImageIcon = new ImageIcon(gameOverImage);
-            JLabel gameOverLabel = new JLabel(resizedGameOverImageIcon);
-            messagePanel.add(gameOverLabel);
+        } else if (gameOver == EndFlag.CAUGHT) {
+            messagePanel.add(new JLabel("Game Over! You've been caught by an enemy.", SwingConstants.CENTER));
         }
+        else if (gameOver == EndFlag.NO_HEALTH_POINTS){
+            messagePanel.add(new JLabel("Game Over! You've run out of health points.", SwingConstants.CENTER));
+        }
+
 
 
         mainPanel.add(messagePanel, gbc);

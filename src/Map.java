@@ -1,7 +1,13 @@
+package src;
+
+import src.Bullet;
+import src.Dog;
+import src.Enemy;
+import src.Level;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 public class Map {
     private int[][] layout;

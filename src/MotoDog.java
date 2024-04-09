@@ -1,19 +1,24 @@
+package src;
+
+import src.Dog;
+
 import java.awt.Color;
 import java.awt.Graphics;
+public class MotoDog extends Dog {
+    //each dog heals the player when collected
+    private final int healPower = 10;
 
-public class ClassicDog extends Dog{
-    private int healPower = 0;
+    private final int points = 5;
 
-    private int points = 1;
+    private final String ability = " ";
 
-
-    public ClassicDog(String name, int possitionX, int posstionY){
+    public MotoDog(String name, int possitionX, int posstionY){
         super(name, possitionX, posstionY);
     }
 
     //getters
 
-    /*public int getHealPower(){
+    public int getHealPower(){
         return healPower;
     }
 
@@ -21,22 +26,25 @@ public class ClassicDog extends Dog{
         return points;
     }
 
-    //methods
+    public String getAbility(){
+        return ability;
+    }
 
-    public void beingCollected(Player player) {
+    //methods
+/*
+    public void beingCollected(src.Player player){
         player.setHealthPoints(player.getHealthPoints() + healPower);
         player.setScore(player.getScore() + points);
         collected = true;
-    }*/
-
+    }
+*/
     // Draw the dog
 
     @Override
     public void drawDog(Graphics g, Dog dog) {
         int cellSize = 40;
-        g.setColor(Color.RED);
+        g.setColor(Color.YELLOW);
         g.fillOval(positionX * cellSize, positionY * cellSize, cellSize, cellSize);
     }
-
 
 }

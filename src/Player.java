@@ -1,6 +1,9 @@
+package src;
+
 import java.awt.*;
 
 public class Player {
+    private static Player instance;
     private String username;
     private int score;
     private int healthPoints;
@@ -9,10 +12,9 @@ public class Player {
     private int positionX;
     private int positionY;
     private int bullets;
-    private int dogs;
 
-    // Constructor
-    public Player(String username, int score, int healthPoints, int attackPower, String ability, int positionX, int positionY, int bullets) {
+
+    private Player(String username, int score, int healthPoints, int attackPower, String ability, int positionX, int positionY, int bullets) {
         this.username = username;
         this.score = score;
         this.healthPoints = healthPoints;
@@ -21,7 +23,14 @@ public class Player {
         this.positionX = positionX;
         this.positionY = positionY;
         this.bullets = bullets;
-        this.dogs = 0;
+    }
+
+
+    public static Player getInstance(String username, int score, int healthPoints, int attackPower, String ability, int positionX, int positionY, int bullets) {
+        if (instance == null) {
+            instance = new Player(username, score, healthPoints, attackPower, ability, positionX, positionY, bullets);
+        }
+        return instance;
     }
 
     // Getters
@@ -55,10 +64,6 @@ public class Player {
 
     public int getBullets() {
         return bullets;
-    }
-
-    public int getDogs() {
-        return dogs;
     }
 
     // Setters
@@ -128,9 +133,27 @@ public class Player {
         }
     }
 
+    public void collectedADog(Dog dog){
+        if (dog instanceof ClassicDog){
+            healthPoints += ((ClassicDog) dog).getHealPower();
+            score += ((ClassicDog) dog).getPoints();
+        }
+        else{
+            healthPoints += ((MotoDog) dog).getHealPower();
+            score += ((MotoDog) dog).getPoints();
+            ability = ((MotoDog) dog).getAbility();
+        }
+    }
+
     public static void drawPlayer(Graphics g, Player player) {
         int cellSize = 40;
         g.setColor(Color.RED);
         g.fillOval(player.getPositionX() * cellSize, player.getPositionY() * cellSize, cellSize, cellSize);
+    }
+
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
     }
 }

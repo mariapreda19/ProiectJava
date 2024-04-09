@@ -1,9 +1,10 @@
+package src;
+
 import java.awt.*;
-import java.util.List;
 
 public class Bullet {
-    private int x, y; // Bullet position
-    private int dx, dy; // Bullet direction and speed
+    private int x, y; // src.Bullet position
+    private int dx, dy; // src.Bullet direction and speed
     private boolean active; // If the bullet is active or not
     private boolean collected; // If the bullet is collected or not
 

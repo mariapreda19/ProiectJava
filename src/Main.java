@@ -1,3 +1,6 @@
+package src;
+
+import src.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,8 @@ public class Main {
         List<Bullet> bulletPositions = new ArrayList<>();
         bulletPositions.add(new Bullet(2, 2, 1, 0));
 
-        Player player = new Player("Player", 1, 1, 0, "", 1, 1, 0);
+
+        Player player = Player.getInstance("Maria", 0, 100, 10, "classic", 1, 1, 0);
 
         Map map = new Map(layout, dogPositions, bulletPositions, player, new Level(1, 1, 1, 1, 1), new ArrayList<>());
 

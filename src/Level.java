@@ -1,3 +1,5 @@
+package src;
+
 public class Level {
     private int levelNumber;
     private int enemiesNumber;
