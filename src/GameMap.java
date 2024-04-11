@@ -2,18 +2,20 @@ package src;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 
-public class Map {
+public class GameMap {
     private final int[][] layout;
     private final List<Dog> dogs;
     private final List<Bullet> bullets;
     private final Player player;
     private final Level level;
     private final List<Enemy> enemies;
-    private final List<Wall> walls = new ArrayList<>();
+    private final Set<Wall> walls = new HashSet<>();
 
-    public Map(int[][] layout, List<Dog> dogs, List<Bullet> bullets, Player player, Level level, List<Enemy> enemies) {
+    public GameMap(int[][] layout, List<Dog> dogs, List<Bullet> bullets, Player player, Level level, List<Enemy> enemies) {
         this.layout = layout;
         this.dogs = dogs;
         this.bullets = bullets;
@@ -25,21 +27,23 @@ public class Map {
             boolean noCollision;
             int x;
             int y;
-            do{
+            do {
                 noCollision = true;
                 x = (int) (Math.random() * 10);
                 y = (int) (Math.random() * 10);
                 for (Dog dog : dogs) {
                     if (dog.getPositionX() == x && dog.getPositionY() == y) {
                         noCollision = false;
+                        break;
                     }
                 }
-                for(Bullet bullet : bullets){
-                    if(bullet.getPositionX() == x && bullet.getPositionY() == y){
+                for (Bullet bullet : bullets) {
+                    if (bullet.getPositionX() == x && bullet.getPositionY() == y) {
                         noCollision = false;
+                        break;
                     }
                 }
-            }while(!noCollision);
+            } while (!noCollision);
 
             Wall wall = new Wall.Builder()
                     .positionX(x)
@@ -63,8 +67,8 @@ public class Map {
         if (x < 0 || x >= layout[0].length || y < 0 || y >= layout.length) {
             return false;
         }
-        for(Wall wall : walls){
-            if(wall.getPositionX() == x && wall.getPositionY() == y){
+        for (Wall wall : walls) {
+            if (wall.getPositionX() == x && wall.getPositionY() == y) {
                 return false;
             }
         }

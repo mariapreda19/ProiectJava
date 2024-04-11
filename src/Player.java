@@ -35,10 +35,6 @@ public class Player {
     }
 
     // Getters
-    public String getUsername() {
-        return username;
-    }
-
     public int getScore() {
         return score;
     }
@@ -78,14 +74,6 @@ public class Player {
 
     public void setHealthPoints(int healthPoints) {
         this.healthPoints = healthPoints;
-    }
-
-    public void setAttackPower(int attackPower) {
-        this.attackPower = attackPower;
-    }
-
-    public void setAbility(String ability) {
-        this.ability = ability;
     }
 
     public void setPositionX(int positionX) {

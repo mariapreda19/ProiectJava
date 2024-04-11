@@ -3,10 +3,10 @@ package src;
 import java.awt.*;
 
 public class Bullet {
-    private int x, y; // src.Bullet position
-    private int dx, dy; // src.Bullet direction and speed
-    private boolean active; // If the bullet is active or not
-    private boolean collected; // If the bullet is collected or not
+    private int x, y;
+    private int dx, dy;
+    private boolean active;
+    private boolean collected;
 
     private int id;
     private static int nextId = 1;
@@ -23,7 +23,6 @@ public class Bullet {
         nextId++;
     }
 
-    // Method to move the bullet
     public void move() {
         x += dx;
         y += dy;
@@ -74,26 +73,22 @@ public class Bullet {
     }
 
     // Methods
-
-    // Method to handle when the bullet misses
     public void missed() {
         active = false;
     }
 
-    // Method to handle when the bullet hits an enemy
     public void hit(Enemy enemy, Player player) {
         enemy.beingShot(player);
         active = false;
     }
 
-    // Method to handle when the bullet is collected by the player
     public void collect(Player player) {
         player.setBullets(player.getBullets() + 1);
         collected = true;
     }
 
     public static void drawBullets(Graphics g, Bullet bullet) {
-        int cellSize = 40; // Size of each cell in pixels
+        int cellSize = 40;
         g.setColor(Color.GREEN);
         if (bullet.isActive()) {
             g.fillOval(bullet.getPositionX() * cellSize, bullet.getPositionY() * cellSize, cellSize, cellSize);

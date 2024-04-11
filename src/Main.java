@@ -32,7 +32,7 @@ public class Main {
         Player player = Player.getInstance("Maria", 0, 100, 10, "classic", 1, 1, 0);
 
 
-        Map map = new Map(layout, dogPositions, bulletPositions, player, new Level(1, 1, 1, 1, 1), new ArrayList<>());
+        GameMap map = new GameMap(layout, dogPositions, bulletPositions, player, new Level(1, 1, 1, 1, 1), new ArrayList<>());
 
         List<Enemy> enemies = new ArrayList<>();
         Level level = new Level(1, 1, 1, 1, 1);

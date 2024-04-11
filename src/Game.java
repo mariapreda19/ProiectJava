@@ -13,14 +13,14 @@ enum EndFlag{
 
 
 public class Game {
-    private Map map;
-    private Player player;
-    private List<Enemy> enemies;
+    private final GameMap map;
+    private final Player player;
+    private final List<Enemy> enemies;
     private Level level;
     private JPanel panel;
     private EndFlag gameOver;
 
-    public Game(Map map, Player player, List<Enemy> enemies, Level level) {
+    public Game(GameMap map, Player player, List<Enemy> enemies, Level level) {
         this.map = map;
         this.player = player;
         this.enemies = enemies;

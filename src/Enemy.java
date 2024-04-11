@@ -81,7 +81,7 @@ public class Enemy {
 
 
     // Method to move the enemy using A*
-    public void move(int playerX, int playerY, int[][] mapLayout, Map map) {
+    public void move(int playerX, int playerY, int[][] mapLayout, GameMap map) {
         Node startNode = new Node(positionX, positionY);
         Node targetNode = new Node(playerX, playerY);
 
@@ -95,7 +95,7 @@ public class Enemy {
     }
 
 
-    private List<Node> findPath(Node start, Node target, int[][] mapLayout, Map map) {
+    private List<Node> findPath(Node start, Node target, int[][] mapLayout, GameMap map) {
 
         List<Node> openList = new ArrayList<>();
         List<Node> closedList = new ArrayList<>();
@@ -154,7 +154,7 @@ public class Enemy {
         return path;
     }
 
-    private List<Node> getNeighbors(Node node, int[][] mapLayout, Map map) {
+    private List<Node> getNeighbors(Node node, int[][] mapLayout, GameMap map) {
         List<Node> neighbors = new ArrayList<>();
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
