@@ -1,5 +1,6 @@
 package src;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Player {
@@ -99,22 +100,6 @@ public class Player {
         this.bullets = bullets;
     }
 
-    // Methods
-    public void moveUp() {
-        positionY--;
-    }
-
-    public void moveDown() {
-        positionY++;
-    }
-
-    public void moveLeft() {
-        positionX--;
-    }
-
-    public void moveRight() {
-        positionX++;
-    }
 
     public void shoot() {
         bullets--;
@@ -147,8 +132,13 @@ public class Player {
 
     public static void drawPlayer(Graphics g, Player player) {
         int cellSize = 40;
-        g.setColor(Color.RED);
-        g.fillOval(player.getPositionX() * cellSize, player.getPositionY() * cellSize, cellSize, cellSize);
+        try {
+            ImageIcon icon = new ImageIcon(Player.class.getResource("../img/player1.png"));
+            Image image = icon.getImage();
+            g.drawImage(image, player.getPositionX() * cellSize, player.getPositionY() * cellSize, cellSize, cellSize, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -1,14 +1,14 @@
 package src;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import javax.swing.ImageIcon;
 import java.awt.Image;
+import javax.swing.ImageIcon;
+import java.awt.*;
+
 
 public class ClassicDog extends Dog {
-    private int healPower = 0;
+    private final int healPower = 0;
 
-    private int points = 1;
+    private final int points = 1;
 
 
     public ClassicDog(String name, int possitionX, int posstionY){
@@ -31,9 +31,9 @@ public class ClassicDog extends Dog {
 
     @Override
     public void drawDog(Graphics g, Dog dog) {
-        int cellSize = 200;
+        int cellSize = 40;
         try {
-            ImageIcon icon = new ImageIcon(getClass().getResource("../img/2-removebag-preview.png"));
+            ImageIcon icon = new ImageIcon(getClass().getResource("../img/2-removebg-preview.png"));
             Image image = icon.getImage();
             g.drawImage(image, positionX * cellSize, positionY * cellSize, cellSize, cellSize, null);
         } catch (Exception e) {

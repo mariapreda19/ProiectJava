@@ -2,8 +2,9 @@ package src;
 
 import src.Dog;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
+
 public class MotoDog extends Dog {
     //each dog heals the player when collected
     private final int healPower = 10;
@@ -43,8 +44,12 @@ public class MotoDog extends Dog {
     @Override
     public void drawDog(Graphics g, Dog dog) {
         int cellSize = 40;
-        g.setColor(Color.YELLOW);
-        g.fillOval(positionX * cellSize, positionY * cellSize, cellSize, cellSize);
+        try {
+            ImageIcon icon = new ImageIcon(getClass().getResource("../img/3-removebg-preview.png"));
+            Image image = icon.getImage();
+            g.drawImage(image, positionX * cellSize, positionY * cellSize, cellSize, cellSize, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
 }

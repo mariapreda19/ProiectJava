@@ -1,5 +1,6 @@
 package src;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -61,41 +62,40 @@ public class Enemy {
     }
 
     public void beingShot(Player player) {
-        // If a bullet touches the enemy, the enemy's health points will decrease by the player's attack power
         this.healthPoints -= player.getAttackPower();
     }
 
-    // Method to draw the enemies
-    public static void drawEnemies(Graphics g, Enemy enemy) {
-        int cellSize = 40; // Size of each cell in pixels
-        g.setColor(Color.ORANGE);
-        int[] position = enemy.getPosition();
-        g.fillOval(position[0] * cellSize, position[1] * cellSize, cellSize, cellSize);
 
+    public static void drawEnemies(Graphics g, Enemy enemy) {
+        int cellSize = 40;
+        try {
+            ImageIcon icon = new ImageIcon(Player.class.getResource("../img/enemy1.png"));
+            Image image = icon.getImage();
+            g.drawImage(image, enemy.getPosition()[0] * cellSize, enemy.getPosition()[1] * cellSize, cellSize, cellSize, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
 
 
     // Method to move the enemy using A*
-    public void move(int playerX, int playerY, int[][] mapLayout) {
-        // Create nodes for enemy position and player position
+    public void move(int playerX, int playerY, int[][] mapLayout, Map map) {
         Node startNode = new Node(positionX, positionY);
         Node targetNode = new Node(playerX, playerY);
 
-        // Find the path using A* (now inefficiently implemented)
-        List<Node> path = findPath(startNode, targetNode, mapLayout);
+        List<Node> path = findPath(startNode, targetNode, mapLayout, map);
 
-        // Move the enemy along the path (now updates position more frequently)
         if (!path.isEmpty()) {
-            Node nextNode = path.get(0); // Get the next node in the path (first node is current position)
+            Node nextNode = path.get(0);
             positionX = nextNode.x;
             positionY = nextNode.y;
         }
     }
 
-    // A* pathfinding algorithm
-    private List<Node> findPath(Node start, Node target, int[][] mapLayout) {
+
+    private List<Node> findPath(Node start, Node target, int[][] mapLayout, Map map) {
 
         List<Node> openList = new ArrayList<>();
         List<Node> closedList = new ArrayList<>();
@@ -103,7 +103,6 @@ public class Enemy {
         openList.add(start);
 
         while (!openList.isEmpty()) {
-            //make the enemy less efficient
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -124,7 +123,7 @@ public class Enemy {
                 return retracePath(start, currentNode);
             }
 
-            List<Node> neighbors = getNeighbors(currentNode, mapLayout);
+            List<Node> neighbors = getNeighbors(currentNode, mapLayout, map);
             for (Node neighbor : neighbors) {
                 if (!closedList.contains(neighbor)) {
                     int newCostToNeighbor = currentNode.gCost + getDistance(currentNode, neighbor);
@@ -155,21 +154,22 @@ public class Enemy {
         return path;
     }
 
-    private List<Node> getNeighbors(Node node, int[][] mapLayout) {
+    private List<Node> getNeighbors(Node node, int[][] mapLayout, Map map) {
         List<Node> neighbors = new ArrayList<>();
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Up, Down, Left, Right
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
         for (int[] dir : directions) {
             int newX = node.x + dir[0];
             int newY = node.y + dir[1];
 
-            if (newX >= 0 && newX < mapLayout[0].length && newY >= 0 && newY < mapLayout.length && mapLayout[newY][newX] == 0) {
+            if (map.isWalkable(newX, newY)) {
                 neighbors.add(new Node(newX, newY));
             }
         }
 
         return neighbors;
     }
+
 
     private int getDistance(Node nodeA, Node nodeB) {
         return Math.abs(nodeA.x - nodeB.x) + Math.abs(nodeA.y - nodeB.y);

@@ -1,7 +1,4 @@
 package src;
-
-import src.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +23,14 @@ public class Main {
 
         List<Dog> dogPositions = new ArrayList<>();
         dogPositions.add(new ClassicDog("Buddy", 1, 2));
-        dogPositions.add(new MotoDog("Rex", 3, 3));
+        dogPositions.add(new MotoDog("Rex", 7, 7));
+        dogPositions.add(new ClassicDog("Buddy", 5, 2));
 
         List<Bullet> bulletPositions = new ArrayList<>();
         bulletPositions.add(new Bullet(2, 2, 1, 0));
 
-
         Player player = Player.getInstance("Maria", 0, 100, 10, "classic", 1, 1, 0);
+
 
         Map map = new Map(layout, dogPositions, bulletPositions, player, new Level(1, 1, 1, 1, 1), new ArrayList<>());
 
@@ -43,4 +41,5 @@ public class Main {
 
         game.startGame();
     }
+
 }

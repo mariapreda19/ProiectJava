@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import javax.swing.ImageIcon;
 
 enum EndFlag{
     CAUGHT, WON, NO_HEALTH_POINTS, NOFLAGS
@@ -33,8 +32,8 @@ public class Game {
         enemies.add(enemy1);
     }
 
-    public void update(float lastTime, float currentTime) {
-        if (gameOver != EndFlag.NOFLAGS) return;
+    public float update(float lastTime, float currentTime) {
+        if (gameOver != EndFlag.NOFLAGS) return lastTime;
 
 
         // Decrease player health points at every 10 seconds of the game
@@ -67,7 +66,7 @@ public class Game {
 
 
         for (Enemy enemy : enemies) {
-            enemy.move(player.getPositionX(), player.getPositionY(), map.getLayout());
+            enemy.move(player.getPositionX(), player.getPositionY(), map.getLayout(), map);
             enemy.catchPlayer(player);
             if (enemy.getPosition()[0] == player.getPositionX() && enemy.getPosition()[1] == player.getPositionY()) {
                 System.out.println("src.Game Over! You've been caught by an enemy.");
@@ -78,6 +77,8 @@ public class Game {
         if (allDogsCollected()) {
             allDogsCollected();
         }
+
+        return lastTime;
     }
 
     private boolean allDogsCollected() {
@@ -92,7 +93,12 @@ public class Game {
     }
 
     public void movePlayer(int dx, int dy) {
-        map.movePlayer(player, dx, dy);
+        int newX = player.getPositionX() + dx;
+        int newY = player.getPositionY() + dy;
+
+        if (map.isWalkable(newX, newY)) {
+            map.movePlayer(player, dx, dy);
+        }
     }
 
     public void shoot(int dx, int dy) {
@@ -118,15 +124,9 @@ public class Game {
                 super.paintComponent(g);
                 if (gameOver == EndFlag.NOFLAGS) {
                     map.drawMap(g);
-                    player.drawPlayer(g, player);
-                    for (Dog dog : map.getDogPositions()) {
-                        dog.drawDog(g, dog);
-                    }
+                    Player.drawPlayer(g, player);
                     for (Enemy enemy : enemies) {
-                        enemy.drawEnemies(g, enemy);
-                    }
-                    for (Bullet bullet : map.getBullets()) {
-                        bullet.drawBullets(g, bullet);
+                        Enemy.drawEnemies(g, enemy);
                     }
                 }
             }
@@ -183,7 +183,7 @@ public class Game {
 
 
         while (gameOver == EndFlag.NOFLAGS) {
-            update(lastTime, System.currentTimeMillis() / 1000);
+            lastTime = update(lastTime, (float) System.currentTimeMillis() / 1000);
 
 
             scoreLabel.setText("Score: " + player.getScore());
@@ -203,6 +203,12 @@ public class Game {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
+        finalMesssage(mainPanel, statusPanel, messagePanel, gbc);
+
+    }
+
+
+    public void finalMesssage(JPanel mainPanel, JPanel statusPanel, JPanel messagePanel, GridBagConstraints gbc){
         mainPanel.remove(statusPanel);
 
         if (gameOver == EndFlag.WON) {
@@ -219,8 +225,5 @@ public class Game {
         mainPanel.add(messagePanel, gbc);
         mainPanel.revalidate();
     }
-
-
-
 
 }

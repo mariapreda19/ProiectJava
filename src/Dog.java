@@ -1,6 +1,8 @@
 package src;
 
-import java.awt.*;
+import java.awt.Graphics;
+
+
 
 public abstract class Dog {
     protected String name;
@@ -14,11 +16,6 @@ public abstract class Dog {
         this.collected = false;
     }
 
-    // Getters
-    /*public String getName() {
-        return name;
-    }*/
-
     public int getPositionX() {
         return positionX;
     }
@@ -31,20 +28,9 @@ public abstract class Dog {
         return collected;
     }
 
-    // Setters
-    /*public void setName(String name) {
-        this.name = name;
-    }*/
-
-    /*public void setPosition(int positionX, int positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
-    }*/
-
     public void setCollected(boolean collected) {
         this.collected = collected;
     }
 
-    //abstract method for drawing the dog
     public abstract void drawDog(Graphics g, Dog dog);
 }
